@@ -1,0 +1,31 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      want:
+        description: Request id set by the reconciler
+        type: string
+        default: ""
+
+run-name: ${{ inputs.want != '' && format('Build {0}', inputs.want) || '' }}
+
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.ref) || 'publish' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions: {}
+
+jobs:
+  build:
+    uses: randomcontainers/ci/.github/workflows/build.yml@v1
+    permissions:
+      contents: write # source release
+      packages: write # push images
+      id-token: write # sign the attestation
+      attestations: write # store the attestation
+      artifact-metadata: write # record the image
+      security-events: write # upload scan results
+    with:
+      default-only: false
+      want: ${{ inputs.want }}

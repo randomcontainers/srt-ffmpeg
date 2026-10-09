@@ -1,0 +1,16 @@
+# syntax=docker/dockerfile:1.27.0@sha256:bde3983e9c939224420ddaf6b784cc30e09b035a4dea01f581230c50809f372e
+# Generated from randomcontainers/srt package.yml by randomcontainers/ci. Do not edit.
+FROM ffmpeg AS base
+FROM srt AS srt
+FROM base
+USER 0:0
+COPY --link --from=srt /usr/local/ /usr/local/
+RUN set -eu; \
+    for f in /usr/local/share/randomcontainers/*/runtime-deps; do cat "$f"; echo; done > /tmp/runtime-deps; \
+    sort -u -o /tmp/runtime-deps /tmp/runtime-deps; \
+    if grep -Ev '^((so:)?[A-Za-z0-9][A-Za-z0-9+._-]*)?$' /tmp/runtime-deps >&2; then echo 'runtime-deps: invalid package name' >&2; exit 1; fi; \
+    xargs apk add --no-cache < /tmp/runtime-deps; \
+    rm -f /tmp/runtime-deps
+USER 1000:1000
+ENTRYPOINT ["tini","--","srt-live-transmit"]
+CMD ["-h"]

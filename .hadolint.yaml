@@ -1,0 +1,7 @@
+ignored:
+  # The FROM lines name build contexts, which the build pins by digest.
+  - DL3006
+  # Packages come from the distro release the image is built on and are
+  # refreshed by scheduled rebuilds; pinning versions would break those.
+  - DL3008
+  - DL3018

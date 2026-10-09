@@ -1,0 +1,7 @@
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        # The shared build workflow is called by its major tag, which is protected in randomcontainers/ci.
+        "randomcontainers/*": ref-pin
+        "*": hash-pin

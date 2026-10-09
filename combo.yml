@@ -1,0 +1,5 @@
+# Generated from the combos section of randomcontainers/srt package.yml by randomcontainers/ci.
+# Do not edit; change package.yml in randomcontainers/srt instead.
+name: srt-ffmpeg
+owner: srt
+with: [ffmpeg]
