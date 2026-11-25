@@ -58,7 +58,16 @@ gh attestation verify oci://ghcr.io/randomcontainers/srt-ffmpeg:latest \
   --repo randomcontainers/srt-ffmpeg --signer-repo randomcontainers/ci
 ```
 
-Images from `ghcr.io/randomcontainers/srt` are built in [randomcontainers/srt](https://github.com/randomcontainers/srt), so verify them with `--repo randomcontainers/srt --signer-repo randomcontainers/ci`.
+Each image also has a keyless cosign signature from the same workflow, for admission controllers that check cosign signatures:
+
+```sh
+cosign verify ghcr.io/randomcontainers/srt-ffmpeg:latest \
+  --certificate-identity https://github.com/randomcontainers/ci/.github/workflows/build.yml@refs/tags/v1 \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  --certificate-github-workflow-repository randomcontainers/srt-ffmpeg
+```
+
+Images from `ghcr.io/randomcontainers/srt` are built in [randomcontainers/srt](https://github.com/randomcontainers/srt), so name that repository in `--repo` and `--certificate-github-workflow-repository`.
 
 ## Updates
 
